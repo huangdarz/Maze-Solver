@@ -1,9 +1,10 @@
 package maze_solver.ui;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import maze_solver.ui.scenes.BaseScene;
+import maze_solver.ui.scenes.MainScene;
+import maze_solver.ui.scenes.StartScene;
 
 public class Main extends Application {
 
@@ -13,7 +14,24 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(new Pane(), 300, 275));
+        primaryStage.setTitle("Maze Solver");
+
+        var start = new StartScene(primaryStage);
+        var mainScene = new MainScene(primaryStage);
+
+        BaseScene.saveFileProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !BaseScene.nameProperty.isEmpty().get()) {
+                primaryStage.setScene(mainScene);
+            }
+        });
+
+        BaseScene.nameProperty.addListener((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                primaryStage.setTitle("Maze Solver" + " | " + newValue);
+            }
+        });
+
+        primaryStage.setScene(start);
         primaryStage.show();
     }
 }
